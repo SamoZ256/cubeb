@@ -278,9 +278,10 @@ endif()
 
 check_include_files(AudioUnit/AudioUnit.h USE_AUDIOUNIT)
 if(USE_AUDIOUNIT)
-  target_sources(cubeb PRIVATE
-    src/cubeb_audiounit.cpp
-    src/cubeb_osx_run_loop.cpp)
+  target_sources(cubeb PRIVATE src/cubeb_audiounit.cpp)
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    target_sources(cubeb PRIVATE src/cubeb_osx_run_loop.cpp)
+  endif()
   target_compile_definitions(cubeb PRIVATE USE_AUDIOUNIT)
   target_link_libraries(cubeb PRIVATE "-framework AudioUnit" "-framework CoreAudio" "-framework CoreServices")
   list(APPEND private_libs_flags "-framework AudioUnit" "-framework CoreAudio" "-framework CoreServices")
@@ -508,4 +509,3 @@ configure_file(libcubeb.pc.in libcubeb.pc @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libcubeb.pc"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
-
